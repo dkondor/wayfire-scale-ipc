@@ -6,7 +6,7 @@ Extra IPC interaction for the scale plugin of Wayfire. Currently, it provides th
 
 ### 1. Dependencies
 
-It needs a recent version of Wayfire (at least commit [48c3048](https://github.com/WayfireWM/wayfire/pull/1864/commits/48c30481afe47c8235885d2a2c7378091e6293f2)) and [nlohmann_json/](https://github.com/nlohmann/json/). For building, it needs [Meson](https://mesonbuild.com/).
+It needs a recent version of Wayfire (at least commit [3ac0284](https://github.com/WayfireWM/wayfire/pull/1864/commits/3ac028406cc3697dd40c128721fb6e681b00c337)) and [nlohmann_json/](https://github.com/nlohmann/json/). For building, it needs [Meson](https://mesonbuild.com/).
 
 
 ### 2. Downloading the source

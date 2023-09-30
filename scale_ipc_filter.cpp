@@ -1,6 +1,6 @@
 #include <wayfire/core.hpp>
 #include <wayfire/util.hpp>
-#include <wayfire/output.hpp>
+#include <wayfire/seat.hpp>
 #include <wayfire/plugin.hpp>
 #include <wayfire/per-output-plugin.hpp>
 #include <wayfire/toplevel-view.hpp>
@@ -105,7 +105,7 @@ class scale_ipc_activator_global : public wf::plugin_interface_t,
 				if (!output) return wf::ipc::json_error("output not found");
 			}
 			else {
-				output = wf::get_core().get_active_output();
+				output = wf::get_core().seat->get_active_output();
 				if (!output) return wf::ipc::json_error("no active output");
 			}
 			
