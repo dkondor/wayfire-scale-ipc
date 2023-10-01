@@ -101,7 +101,7 @@ class scale_ipc_activator_global : public wf::plugin_interface_t,
 			if (data.count("case_sensitive")) case_sensitive = data["case_sensitive"];
 			if (data.count("all_workspaces")) all_workspaces = data["all_workspaces"];
 			if (data.count("output_id")) {
-				output = wf::ipc::find_output_by_id(data["id"]);
+				output = wf::ipc::find_output_by_id(data["output_id"]);
 				if (!output) return wf::ipc::json_error("output not found");
 			}
 			else {
