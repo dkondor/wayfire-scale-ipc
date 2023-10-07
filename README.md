@@ -35,7 +35,7 @@ sudo ninja -C build install
 
 Enable it in [WCM](https://github.com/WayfireWM/wcm) ("Scale IPC addon" in the Utilities category) or in the config file by adding `scale_ipc_filter` to the list of active plugins (`core/plugins`).
 
-Important: it needs the IPC plugin to also be active! This currently does not show up in WCM, but needs to be enabled in the config file:
+Important: it needs the IPC plugin to also be active! For recent Wayfire versions, this is available as "IPC protocol" in WCM and can be enabled from there. For older Wayfire, it can be enabled in the config file:
 1. Open the config file in a text editor (by default, it is under `~/.config/wayfire.ini`)
 2. Find the `[core]` section and the line starting with `plugins = `
 3. Add `ipc` anywhere in this line
