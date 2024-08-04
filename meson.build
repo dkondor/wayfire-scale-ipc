@@ -22,7 +22,7 @@ scale_ipc_filter_lib = shared_module('scale_ipc_filter', sources,
     dependencies: [wayfire, json],
     install: true,
     install_dir: wayfire.get_variable(pkgconfig: 'plugindir'),
-    cpp_args: ['-Wno-unused-parameter', '-Wno-format-security','-DWAYFIRE_PLUGIN', '-DWLR_USE_UNSTABLE'],
+    cpp_args: ['-Wno-unused-parameter', '-Wno-format-security','-DWAYFIRE_PLUGIN'],
     link_args: '-rdynamic')
 
 install_data('scale_ipc_filter.xml', install_dir: wayfire.get_variable(pkgconfig: 'metadatadir'))
