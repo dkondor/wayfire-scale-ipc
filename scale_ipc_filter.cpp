@@ -14,8 +14,10 @@ class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 	private:
 		
 		bool active = false;
+		bool active_all_workspaces = false; /* whether currently running scale spans all workspaces */
 		std::string current_filter; /* currently active filter */
 		bool current_case_sensitive = true; /* whether the filter should be case sensitive */
+		wf::wl_idle_call idle_generate; /* idle call used to deactivate scale if needed */
 		
 		bool should_show_view(wayfire_toplevel_view view) const {
 			const std::string& app_id_str = current_filter;
@@ -46,7 +48,8 @@ class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 			current_filter = filter;
 			current_case_sensitive = case_sensitive;
 			active = true;
-			if (!output->is_plugin_active("scale")) {
+			if (!output->is_plugin_active("scale") || all_workspaces != active_all_workspaces) {
+				active_all_workspaces = all_workspaces;
 				nlohmann::json data;
 				data["output_id"] = output->get_id();
 				wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> repo;
@@ -60,9 +63,36 @@ class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 		}
 
 		wf::signal::connection_t<scale_filter_signal> view_filter = [this] (scale_filter_signal *signal) {
-			if (active) scale_filter_views(signal, [this] (wayfire_toplevel_view v) {
-					return !should_show_view(v);
-				});
+			if (active) {
+				bool have_hidden_views = false;
+				for (const auto& v : signal->views_hidden) {
+					if (should_show_view(v)) {
+						have_hidden_views = true;
+						break;
+					}
+				}
+				
+				auto it = std::remove_if(signal->views_shown.begin(), signal->views_shown.end(),
+					[signal, this] (wayfire_toplevel_view v) {
+						bool r = !should_show_view(v);
+						if (r) signal->views_hidden.push_back(v);
+						return r;
+					});
+				signal->views_shown.erase(it, signal->views_shown.end());
+				
+				if (!have_hidden_views && signal->views_shown.empty()) {
+					// end scale if we have no views left to show
+					// (but not if another plugin already hid some views that we would show)
+					idle_generate.run_once([this] () {
+						if (active) {
+							nlohmann::json data;
+							data["output_id"] = output->get_id();
+							wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> repo;
+							repo->call_method(active_all_workspaces ? "scale/toggle_all" : "scale/toggle", data);
+						}
+					});
+				}
+			}
 		};
 		
 		wf::signal::connection_t<scale_end_signal> scale_end = [this] (scale_end_signal *data) {
