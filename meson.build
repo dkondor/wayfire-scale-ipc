@@ -1,7 +1,7 @@
 project(
 	'wayfire_scale_ipc',
 	'cpp',
-	version: '0.0.1',
+	version: '1.0.0',
 	license: 'Unlicense',
 	meson_version: '>=0.51.0',
 	default_options: [
@@ -13,8 +13,6 @@ project(
 
 # dependencies for loadable plugin
 wayfire  = dependency('wayfire')
-# wlroots  = dependency('wlroots')
-# wlserver = dependency('wayland-server')
 json     = dependency('nlohmann_json', required: true)
 
 sources = ['scale_ipc_filter.cpp']
