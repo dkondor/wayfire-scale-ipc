@@ -40,12 +40,13 @@ Important: it needs the IPC plugin to also be active! For recent Wayfire version
 2. Find the `[core]` section and the line starting with `plugins = `
 3. Add `ipc` anywhere in this line
 
-Once this plugin is enabled, it can be activated by sending the `scale_ipc_filter/activate_appid` command via IPC. A simple example in Python that uses the [wayfire_socket](https://github.com/WayfireWM/wayfire/blob/master/ipc-scripts/wayfire_socket.py) imlementation would work as follows:
+Once this plugin is enabled, it can be activated by sending the `scale_ipc_filter/activate_appid` command via IPC. A simple example in Python that uses the [pywayfire](https://github.com/WayfireWM/pywayfire) library would work as follows:
 
 ```
-import wayfire_socket as ws
-socket = ws.WayfireSocket('/tmp/wayfire-wayland-1.socket')
-msg = ws.get_msg_template('scale_ipc_filter/activate_appid')
+import wayfire
+from wayfire.core.template import get_msg_template
+socket = wayfire.WayfireSocket('/tmp/wayfire-wayland-1.socket') # or use: os.environ['WAYFIRE_SOCKET']
+msg = get_msg_template('scale_ipc_filter/activate_appid')
 msg['data']['all_workspaces'] = True
 msg['data']['app_id'] = 'sakura'
 socket.send_json(msg)
