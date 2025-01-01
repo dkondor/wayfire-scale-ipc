@@ -1,0 +1,5 @@
+wayfire-scale-ipc for Debian
+
+Extra IPC interaction for the scale plugin of Wayfire. Currently, it provides the scale_ipc_filter/activate_appid IPC method, which will start scale and filter the displayed apps based on the app_id parameter given.
+
+ -- Daniel Kondor <kondor.dani@gmail.com>  Wed, 1 Jan 2025 13:13:32 +0200
