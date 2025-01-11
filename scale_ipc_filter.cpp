@@ -50,16 +50,18 @@ class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 			active = true;
 			if (!output->is_plugin_active("scale") || all_workspaces != active_all_workspaces) {
 				active_all_workspaces = all_workspaces;
-				nlohmann::json data;
-				data["output_id"] = output->get_id();
-				wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> repo;
-				return repo->call_method(all_workspaces ? "scale/toggle_all" : "scale/toggle", data);
+				idle_generate.run_once([this] () {
+					nlohmann::json data;
+					data["output_id"] = output->get_id();
+					wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> repo;
+					repo->call_method(active_all_workspaces ? "scale/toggle_all" : "scale/toggle", data);
+				});
 			}
 			else {
 				scale_update_signal signal;
 				output->emit(&signal);
-				return wf::ipc::json_ok();
 			}
+			return wf::ipc::json_ok();
 		}
 
 		wf::signal::connection_t<scale_filter_signal> view_filter = [this] (scale_filter_signal *signal) {
