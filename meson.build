@@ -12,12 +12,11 @@ project(
 )
 
 # dependencies for loadable plugin
-wayfire  = dependency('wayfire')
-json     = dependency('nlohmann_json', required: true)
+wayfire  = dependency('wayfire', version: '>=0.10.0')
 
 sources = ['scale_ipc_filter.cpp']
 scale_ipc_filter_lib = shared_module('scale_ipc_filter', sources,
-    dependencies: [wayfire, json],
+    dependencies: [wayfire],
     install: true,
     install_dir: wayfire.get_variable(pkgconfig: 'plugindir'),
     cpp_args: ['-Wno-unused-parameter', '-Wno-format-security','-DWAYFIRE_PLUGIN'],
