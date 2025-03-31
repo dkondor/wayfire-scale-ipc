@@ -8,7 +8,6 @@
 #include <wayfire/plugins/scale-signal.hpp>
 #include <wayfire/plugins/ipc/ipc-method-repository.hpp>
 #include <wayfire/plugins/ipc/ipc-helpers.hpp>
-#include <nlohmann/json.hpp>
 
 class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 	private:
@@ -44,14 +43,14 @@ class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 			scale_end.disconnect();
 		}
 		
-		nlohmann::json activate(const std::string& filter, bool case_sensitive, bool all_workspaces) {
+		wf::json_t activate(const std::string& filter, bool case_sensitive, bool all_workspaces) {
 			current_filter = filter;
 			current_case_sensitive = case_sensitive;
 			active = true;
 			if (!output->is_plugin_active("scale") || all_workspaces != active_all_workspaces) {
 				active_all_workspaces = all_workspaces;
 				idle_generate.run_once([this] () {
-					nlohmann::json data;
+					wf::json_t data;
 					data["output_id"] = output->get_id();
 					wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> repo;
 					repo->call_method(active_all_workspaces ? "scale/toggle_all" : "scale/toggle", data);
@@ -87,7 +86,7 @@ class scale_ipc_activator : public wf::per_output_plugin_instance_t {
 					// (but not if another plugin already hid some views that we would show)
 					idle_generate.run_once([this] () {
 						if (active) {
-							nlohmann::json data;
+							wf::json_t data;
 							data["output_id"] = output->get_id();
 							wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> repo;
 							repo->call_method(active_all_workspaces ? "scale/toggle_all" : "scale/toggle", data);
@@ -120,20 +119,20 @@ class scale_ipc_activator_global : public wf::plugin_interface_t,
 			this->fini_output_tracking();
 		}
 		
-		wf::ipc::method_callback activate = [=] (nlohmann::json data) {
+		wf::ipc::method_callback activate = [=] (wf::json_t data) {
 			bool case_sensitive  = true;
 			bool all_workspaces  = false;
 			wf::output_t *output = nullptr;
 			
-			WFJSON_EXPECT_FIELD(data, "app_id", string);
-			WFJSON_OPTIONAL_FIELD(data, "case_sensitive", boolean);
-			WFJSON_OPTIONAL_FIELD(data, "all_workspaces", boolean);
-			WFJSON_OPTIONAL_FIELD(data, "output_id", number_integer);
+			auto app_id = wf::ipc::json_get_string(data, "app_id");
+			auto case_sensitive_opt = wf::ipc::json_get_optional_bool(data, "case_sensitive");
+			auto all_workspaces_opt = wf::ipc::json_get_optional_bool(data, "all_workspaces");
+			auto output_id_opt = wf::ipc::json_get_optional_uint64(data, "output-id");
 			
-			if (data.count("case_sensitive")) case_sensitive = data["case_sensitive"];
-			if (data.count("all_workspaces")) all_workspaces = data["all_workspaces"];
-			if (data.count("output_id")) {
-				output = wf::ipc::find_output_by_id(data["output_id"]);
+			if (case_sensitive_opt.has_value()) case_sensitive = case_sensitive_opt.value();
+			if (all_workspaces_opt.has_value()) all_workspaces = all_workspaces_opt.value();
+			if (output_id_opt.has_value()) {
+				output = wf::ipc::find_output_by_id(output_id_opt.value());
 				if (!output) return wf::ipc::json_error("output not found");
 			}
 			else {
@@ -141,7 +140,7 @@ class scale_ipc_activator_global : public wf::plugin_interface_t,
 				if (!output) return wf::ipc::json_error("no active output");
 			}
 			
-			return this->output_instance[output]->activate(data["app_id"], case_sensitive, all_workspaces);
+			return this->output_instance[output]->activate(app_id, case_sensitive, all_workspaces);
 		};
 };
 
