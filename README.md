@@ -4,15 +4,15 @@ Extra IPC interaction for the scale plugin of Wayfire. Currently, it provides th
 
 ## Installing
 
-### 1. Dependencies
+### Dependencies
 
 It needs a recent version of Wayfire (at least commit [fe33cfa](https://github.com/WayfireWM/wayfire/commit/fe33cfa5b03f11cb9749694929cc33583464bda0)). For building, it needs [Meson](https://mesonbuild.com/).
 
 For older versions of Wayfire (before commit [448ce8b](https://github.com/WayfireWM/wayfire/commit/448ce8b5be341f91b9f3b10ee9d4f3ea8cd57819), use [version 1.0](https://github.com/dkondor/wayfire-scale-ipc/tree/v1.0.0).
 
-### 2. Downloading the source
+### Manual install
 
-Use git:
+Download the sources:
 
 ```
 git clone https://github.com/dkondor/wayfire-scale-ipc.git
@@ -20,9 +20,6 @@ cd wayfire-scale-ipc
 ```
 
 or the "Download ZIP" option (click on the green "Code" button above).
-
-
-### 3. Building and installing
 
 Before using, the code needs to be compiled and installed. It uses the standard Meson way:
 
@@ -32,7 +29,16 @@ ninja -C build
 sudo ninja -C build install
 ```
 
-### 4. Usage
+### Automated install (Wayfire 0.11 or newer)
+
+The plugin can also be installed with [wayfire-plugin](https://github.com/WayfireWM/wayfire/blob/master/docs/wayfire-plugin.md):
+
+```
+wayfire-plugin install https://github.com/dkondor/wayfire-scale-ipc
+```
+
+
+## Usage
 
 Enable it in [WCM](https://github.com/WayfireWM/wcm) ("Scale IPC addon" in the Utilities category) or in the config file by adding `scale_ipc_filter` to the list of active plugins (`core/plugins`).
 
