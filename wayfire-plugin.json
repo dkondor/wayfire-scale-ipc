@@ -1,0 +1,7 @@
+{
+  "name": "scale_ipc_filter",
+  "setup": "Add scale_ipc_filter to [core] plugins, or enable \"Scale IPC addon\" in WCM.",
+  "build_commands": {
+    "setup": ["meson", "setup", "%builddir%", "%sourcedir%", "--prefix", "%prefix%", "-Dlocal_build=true"]
+  }
+}
