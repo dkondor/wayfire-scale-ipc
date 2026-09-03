@@ -1,7 +1,7 @@
 project(
 	'wayfire_scale_ipc',
 	'cpp',
-	version: '1.1.0',
+	version: '1.2.0',
 	license: 'Unlicense',
 	meson_version: '>=0.51.0',
 	default_options: [

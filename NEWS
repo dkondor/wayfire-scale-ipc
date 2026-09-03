@@ -1,3 +1,7 @@
+1.2
+=========
+Make installation work with the wayfire-plugin helper available with Wayfire 0.11
+
 1.1
 =========
 Adapt to new JSON API of Wayfire
